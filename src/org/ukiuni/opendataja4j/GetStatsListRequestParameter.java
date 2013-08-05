@@ -1,7 +1,16 @@
 package org.ukiuni.opendataja4j;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class GetStatsListRequestParameter {
-	private String lang;
+	public static final String ENCODE = "UTF-8";
+	private Lang lang;
+
+	public static enum Lang {
+		Japanese, English;
+	}
+
 	private String surveyYears;
 	private String openYears;
 	private String statsField;
@@ -66,40 +75,49 @@ public class GetStatsListRequestParameter {
 		this.statsNameList = statsNameList;
 	}
 
-	public String getLang() {
+	public Lang getLang() {
 		return lang;
 	}
 
-	public void setLang(String lang) {
+	public void setLang(Lang lang) {
 		this.lang = lang;
 	}
 
 	protected String toParamString() {
 		String parameters = "";
-		if (null != lang) {
-			parameters += "&lang=" + lang;
+		if (Lang.English != lang) {
+			parameters += "&lang=E";
 		}
 		if (null != surveyYears) {
-			parameters += "&surveyYears=" + surveyYears;
+			parameters += "&surveyYears=" + urlEncode(surveyYears);
 		}
 		if (null != openYears) {
-			parameters += "&openYears=" + openYears;
+			parameters += "&openYears=" + urlEncode(openYears);
 		}
 		if (null != statsField) {
-			parameters += "&statsField=" + statsField;
+			parameters += "&statsField=" + urlEncode(statsField);
 		}
 		if (null != statsCode) {
-			parameters += "&statsCode=" + statsCode;
+			parameters += "&statsCode=" + urlEncode(statsCode);
 		}
 		if (null != searchWord) {
-			parameters += "&searchWord=" + searchWord;
+			parameters += "&searchWord=" + urlEncode(searchWord);
 		}
 		if (null != searchKind) {
-			parameters += "&searchKind=" + searchKind;
+			parameters += "&searchKind=" + urlEncode(searchKind);
 		}
 		if (null != statsNameList) {
-			parameters += "&statsNameList=" + statsNameList;
+			parameters += "&statsNameList=" + urlEncode(statsNameList);
 		}
 		return parameters;
+	}
+
+	protected String urlEncode(String src) {
+		try {
+			return URLEncoder.encode(src, ENCODE);
+		} catch (UnsupportedEncodingException e) {
+			// never happen;
+			throw new RuntimeException(e);
+		}
 	}
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir=".." default="create_run_jar" name="OpenDataJa4J">
+	<property environment="env" />
+	<property name="junit.output.dir" value="junit" />
+	<property name="LightHttpServer.location" value="../LightHttpServer" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.6" />
+	<property name="source" value="1.6" />
+	<path id="JUnit 4.libraryclasspath">
+		<pathelement location="build/testLibs/junit.jar" />
+		<pathelement location="build/testLibs/org.hamcrest.core_1.3.0.v201303031735.jar" />
+	</path>
+	<path id="LightHttpServer.classpath">
+		<pathelement location="build/testLibs/lightHttpServer.jar" />
+	</path>
+	<path id="OpenDataJa4J.classpath">
+		<pathelement location="bin" />
+		<path refid="LightHttpServer.classpath" />
+		<path refid="JUnit 4.libraryclasspath" />
+	</path>
+	<target name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="test">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin" />
+	</target>
+	<target depends="clean" name="cleanall">
+		<ant antfile="build.xml" dir="${LightHttpServer.location}" inheritAll="false" target="clean" />
+	</target>
+	<target depends="build-subprojects,build-project" name="build" />
+	<target name="build-subprojects">
+		<ant antfile="build.xml" dir="${LightHttpServer.location}" inheritAll="false" target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+	</target>
+	<target depends="clean,init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+			<src path="src" />
+			<src path="test" />
+			<classpath refid="OpenDataJa4J.classpath" />
+		</javac>
+	</target>
+	<target name="test">
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml" />
+			<test name="test.org.ukiuni.opendateja4j.TestOpenData" todir="${junit.output.dir}" />
+			<classpath refid="OpenDataJa4J.classpath" />
+			<jvmarg value="-Xmx1024m"/>
+		</junit>
+	</target>
+	<target name="junitreport">
+		<junitreport todir="${junit.output.dir}">
+			<fileset dir="${junit.output.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.output.dir}" />
+		</junitreport>
+	</target>
+	<target depends="build-project,test" name="create_run_jar">
+		<jar destfile="build/OpenDataJa4j.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin" />
+		</jar>
+	</target>
+</project>
