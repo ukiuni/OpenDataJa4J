@@ -35,7 +35,7 @@ public class OpenData {
 	private String appRoot = "/api/1.0b/app";
 	private static final String USER_AGENT = "OpenDataJa4J 0.0.001";
 	private String appId;
-	private int READ_TIMEOUT = 10000;
+	private int READ_TIMEOUT = 60000;
 	private int CONNECTION_TIMEOUT = 10000;
 	{
 		try {
