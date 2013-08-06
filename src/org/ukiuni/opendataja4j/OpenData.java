@@ -66,7 +66,13 @@ public class OpenData {
 			}
 		} catch (Throwable e) {
 		}
+	}
 
+	public OpenData() {
+	}
+
+	public OpenData(String appId) {
+		this.appId = appId;
 	}
 
 	public void setAppId(String appId) {
