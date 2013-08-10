@@ -118,8 +118,8 @@ public class TestOpenData {
 
 	@Test
 	public void testMetaInfo() throws Exception {
-		Assert.assertEquals("99%点",createOpenData().getMetaInfo("0003006590").getValue().getInformationHeaderMap().get("cat01").getInformationMap().get("011").getName());
-		if(true){
+		Assert.assertEquals("99%点", createOpenData().getMetaInfo("0003006590").getValue().getInformationHeaderMap().get("cat01").getInformationMap().get("011").getName());
+		if (true) {
 			return;
 		}
 		for (Stat stat : createOpenData().getStatsList().getValue()) {
