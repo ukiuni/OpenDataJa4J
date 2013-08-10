@@ -53,16 +53,27 @@
 		<echo message="${ant.project.name}: ${ant.file}" />
 		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
 			<src path="src" />
+			<classpath refid="OpenDataJa4J.classpath" />
+		</javac>
+	</target>
+	<target depends="clean,init" name="build-test">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="test" includeantruntime="false" source="${source}" target="${target}">
 			<src path="test" />
 			<classpath refid="OpenDataJa4J.classpath" />
 		</javac>
 	</target>
-	<target name="test">
+	<target depends="build-test" name="test">
 		<mkdir dir="${junit.output.dir}" />
 		<junit fork="yes" printsummary="withOutAndErr">
 			<formatter type="xml" />
 			<test name="test.org.ukiuni.opendateja4j.TestOpenData" todir="${junit.output.dir}" />
-			<classpath refid="OpenDataJa4J.classpath" />
+			<classpath >
+				<path refid="JUnit 4.libraryclasspath" />
+				<path refid="LightHttpServer.classpath" />
+				<pathelement location="bin" />
+				<pathelement location="test" />
+			</classpath>
 			<jvmarg value="-Xmx1024m" />
 		</junit>
 	</target>
@@ -85,6 +96,7 @@
 				<attribute name="Class-Path" value="." />
 			</manifest>
 			<fileset dir="bin" />
+			<fileset dir="src" />
 		</jar>
 	</target>
 </project>
